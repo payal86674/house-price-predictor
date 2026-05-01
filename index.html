@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>House Price Predictor (India) — Offline</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand__mark" aria-hidden="true"></div>
+          <div class="brand__text">
+            <div class="brand__title">House Price Predictor</div>
+            <div class="brand__subtitle">India • Offline • Single‑page</div>
+          </div>
+        </div>
+        <div class="topbar__meta">
+          <span class="pill">No backend</span>
+          <span class="pill">No libraries</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="card">
+          <div class="card__head">
+            <h1 class="card__title">Estimate your property value</h1>
+            <p class="card__desc">
+              This estimator uses a weighted model where <strong>location</strong> and
+              <strong>size</strong> dominate, with amenities and environment as secondary modifiers.
+            </p>
+          </div>
+
+          <form id="predictForm" class="form" novalidate>
+            <div class="form__errors" id="errorBox" role="alert" aria-live="polite" hidden>
+              <div class="form__errorsTitle">Please fix the following before estimating:</div>
+              <ul class="form__errorsList" id="errorList"></ul>
+            </div>
+
+            <div class="section">
+              <div class="section__head">
+                <h2 class="section__title">Location</h2>
+                <p class="section__hint">Where the property is and its neighborhood tier.</p>
+              </div>
+
+              <div class="grid">
+                <div class="field">
+                  <label class="label" for="tier">Location / Neighborhood tier</label>
+                  <select id="tier" name="tier" required>
+                    <option value="" selected disabled>Select tier</option>
+                    <option value="Prime">Prime</option>
+                    <option value="Urban">Urban</option>
+                    <option value="Suburban">Suburban</option>
+                    <option value="Outskirts">Outskirts</option>
+                  </select>
+                  <div class="help">Prime areas command the highest premium.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="city">City</label>
+                  <select id="city" name="city" required>
+                    <option value="" selected disabled>Select city</option>
+                    <optgroup label="Major metros">
+                      <option value="Mumbai">Mumbai</option>
+                      <option value="Delhi NCR">Delhi NCR</option>
+                      <option value="Bengaluru">Bengaluru</option>
+                      <option value="Hyderabad">Hyderabad</option>
+                      <option value="Chennai">Chennai</option>
+                      <option value="Kolkata">Kolkata</option>
+                      <option value="Pune">Pune</option>
+                      <option value="Ahmedabad">Ahmedabad</option>
+                    </optgroup>
+                    <optgroup label="Tier‑2 cities">
+                      <option value="Jaipur">Jaipur</option>
+                      <option value="Lucknow">Lucknow</option>
+                      <option value="Indore">Indore</option>
+                      <option value="Surat">Surat</option>
+                      <option value="Coimbatore">Coimbatore</option>
+                      <option value="Kochi">Kochi</option>
+                      <option value="Chandigarh">Chandigarh</option>
+                      <option value="Bhopal">Bhopal</option>
+                      <option value="Nagpur">Nagpur</option>
+                      <option value="Visakhapatnam">Visakhapatnam</option>
+                    </optgroup>
+                  </select>
+                  <div class="help">Different cities have different base ₹/sq ft.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section__head">
+                <h2 class="section__title">Property details</h2>
+                <p class="section__hint">Core characteristics that drive most of the price.</p>
+              </div>
+
+              <div class="grid">
+                <div class="field">
+                  <label class="label" for="sizeSqft">House size (sq ft)</label>
+                  <input
+                    id="sizeSqft"
+                    name="sizeSqft"
+                    type="number"
+                    inputmode="numeric"
+                    min="300"
+                    max="12000"
+                    step="10"
+                    placeholder="e.g., 950"
+                    required
+                  />
+                  <div class="help">Typical range: 300–12,000 sq ft.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="bedrooms">Bedrooms</label>
+                  <input
+                    id="bedrooms"
+                    name="bedrooms"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="10"
+                    step="1"
+                    value="2"
+                    required
+                  />
+                  <div class="help">1–10 (stepper).</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="bathrooms">Bathrooms</label>
+                  <input
+                    id="bathrooms"
+                    name="bathrooms"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="10"
+                    step="1"
+                    value="2"
+                    required
+                  />
+                  <div class="help">1–10 (stepper).</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="floorNo">Floor number</label>
+                  <input
+                    id="floorNo"
+                    name="floorNo"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    max="150"
+                    step="1"
+                    value="2"
+                    required
+                  />
+                  <div class="help">0 for ground floor.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="totalFloors">Total floors in building</label>
+                  <input
+                    id="totalFloors"
+                    name="totalFloors"
+                    type="number"
+                    inputmode="numeric"
+                    min="1"
+                    max="150"
+                    step="1"
+                    value="10"
+                    required
+                  />
+                  <div class="help">Must be ≥ floor number.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="ageYears">Property age (years)</label>
+                  <input
+                    id="ageYears"
+                    name="ageYears"
+                    type="number"
+                    inputmode="numeric"
+                    min="0"
+                    max="80"
+                    step="1"
+                    value="5"
+                    required
+                  />
+                  <div class="help">Newer homes generally price higher.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section__head">
+                <h2 class="section__title">Amenities</h2>
+                <p class="section__hint">Comfort and convenience add secondary premiums.</p>
+              </div>
+
+              <div class="grid">
+                <div class="field">
+                  <label class="label" for="furnishing">Furnishing status</label>
+                  <select id="furnishing" name="furnishing" required>
+                    <option value="" selected disabled>Select furnishing</option>
+                    <option value="Unfurnished">Unfurnished</option>
+                    <option value="Semi">Semi‑furnished</option>
+                    <option value="Fully">Fully furnished</option>
+                  </select>
+                  <div class="help">Furniture/fixtures affect move‑in readiness.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="parking">Parking available</label>
+                  <div class="segmented" role="group" aria-label="Parking available">
+                    <input type="radio" id="parkingYes" name="parking" value="Yes" checked />
+                    <label for="parkingYes">Yes</label>
+                    <input type="radio" id="parkingNo" name="parking" value="No" />
+                    <label for="parkingNo">No</label>
+                  </div>
+                  <div class="help">Parking can add meaningful value in dense cities.</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="metro">Proximity to metro</label>
+                  <select id="metro" name="metro" required>
+                    <option value="" selected disabled>Select distance</option>
+                    <option value="<1km">&lt;1km</option>
+                    <option value="1–5km">1–5km</option>
+                    <option value=">5km">&gt;5km</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="school">Proximity to school</label>
+                  <select id="school" name="school" required>
+                    <option value="" selected disabled>Select distance</option>
+                    <option value="<1km">&lt;1km</option>
+                    <option value="1–5km">1–5km</option>
+                    <option value=">5km">&gt;5km</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="hospital">Proximity to hospital</label>
+                  <select id="hospital" name="hospital" required>
+                    <option value="" selected disabled>Select distance</option>
+                    <option value="<1km">&lt;1km</option>
+                    <option value="1–5km">1–5km</option>
+                    <option value=">5km">&gt;5km</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section__head">
+                <h2 class="section__title">Environment</h2>
+                <p class="section__hint">Broader quality factors that nudge prices up or down.</p>
+              </div>
+
+              <div class="grid">
+                <div class="field">
+                  <label class="label" for="aqi">Air Quality Index zone</label>
+                  <select id="aqi" name="aqi" required>
+                    <option value="" selected disabled>Select AQI zone</option>
+                    <option value="Good">Good</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Poor">Poor</option>
+                  </select>
+                  <div class="help">Poor AQI reduces desirability (small but real impact).</div>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="road">Road connectivity</label>
+                  <select id="road" name="road" required>
+                    <option value="" selected disabled>Select connectivity</option>
+                    <option value="Highway">Highway access</option>
+                    <option value="Main">Main road</option>
+                    <option value="Interior">Interior lane</option>
+                  </select>
+                  <div class="help">Access affects commute and resale liquidity.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ctaRow">
+              <button type="submit" id="estimateBtn" class="btn btn--primary">
+                Estimate Price
+              </button>
+              <button type="button" id="resetBtn" class="btn btn--ghost">Reset</button>
+              <div class="ctaRow__note" aria-hidden="true">Confidence band: ±10%</div>
+            </div>
+          </form>
+        </section>
+
+        <aside class="card card--results" id="resultsCard" aria-live="polite">
+          <div class="card__head">
+            <h2 class="card__title">Estimated value</h2>
+            <p class="card__desc">A quick breakdown of what’s driving the estimate.</p>
+          </div>
+
+          <div class="results" id="results" data-visible="false">
+            <div class="resultGrid">
+              <div class="metric">
+                <div class="metric__label">Estimated price</div>
+                <div class="metric__value" id="priceOut">—</div>
+                <div class="metric__sub" id="rangeOut">—</div>
+              </div>
+              <div class="metric">
+                <div class="metric__label">Price per sq ft</div>
+                <div class="metric__value" id="psfOut">—</div>
+                <div class="metric__sub">Includes location + modifiers</div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="why">
+              <div class="why__title">Why this price?</div>
+              <ol class="why__list" id="whyList"></ol>
+            </div>
+          </div>
+
+          <div class="resultsPlaceholder" id="resultsPlaceholder">
+            Fill in the details and hit <strong>Estimate Price</strong> to see the result.
+          </div>
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>Tip: try changing tier/city/size to see the biggest impact.</span>
+      </footer>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+
